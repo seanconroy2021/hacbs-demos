@@ -5,3 +5,4 @@ resources:
   - release_plan_admission.yaml
   - ec-policy.yaml
   - environment.yaml
+  - role_binding.yaml
