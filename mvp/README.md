@@ -69,6 +69,25 @@ Create release plan
 
 `oc apply -f release/dev-workspace/release_plan.yaml -n dev-release-team-tenant`
 
+Standing Attribution for ReleasePlan
+
+In order for the release process to work successfully, there must be a username to attribute the releasing of the
+particular images to. This document discusses what is called the automated use case, meaning the Release resource is
+created by the integration service when the component builds complete, instead of the Release resource being
+created manually by a user. For the automated use case, the attribution username is retrieved from the ReleasePlan. If
+the ReleasePlan has `release.appstudio.openshift.io/standing-attribution: 'true'`, which this one does, the user who
+creates or most recently modifies the ReleasePlan is set as the author of it and that value is used by the release
+PipelineRuns. Because the standing-attribution label is already set here, there is nothing to do, but it is something
+to be mindful of.
+
+Create RoleBinding for Release PipelineRuns
+
+The release pipelines require access to certain custom resources in both the dev and managed workspaces. To provide this access, a
+RoleBinding must be created for each workspace. The managed workspace one will be created later by the bootstrap scripts, but the
+dev one should be created now
+
+`oc apply -f release/dev-workspace/role_binding.yaml`
+
 | **Login as a Cluster Admin User using Openshift Console**
 
 Get the **cosign public key**
