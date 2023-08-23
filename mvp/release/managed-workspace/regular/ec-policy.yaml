@@ -4,24 +4,22 @@ metadata:
   name: mvp-policy
   namespace: managed-release-team-tenant
 spec:
-  description: Red Hat's enterprise requirements
-  exceptions:
-    nonBlocking:
-    - attestation_task_bundle
-    - java
-    - tasks
-    - test
-    - hermetic_build_task.build_task_not_hermetic
-    - buildah_build_task.dockerfile_param_external_source
-    - step_image_registries.disallowed_task_step_image
-  publicKey: |-
-    -----BEGIN PUBLIC KEY-----
-    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE1D2S9GEhb0op0ZVv/53lxnLUYjP3
-    jG0/VJFmmggPoGNmg1GagPw8dfpq2qTad5MV/JnPFVCar3pBv/55RO8abg==
-    -----END PUBLIC KEY-----
+  description: >-
+    Includes rules for levels 1, 2 & 3 of SLSA v0.1.
+  publicKey: "k8s://openshift-pipelines/public-key"
   sources:
-    - data:
-        - "git::https://github.com/hacbs-contract/ec-policies.git//data"
-      name: ec-policies
+    - name: Default
       policy:
-        - "git::https://github.com/hacbs-contract/ec-policies.git//policy"
+        - github.com/enterprise-contract/ec-policies//policy/lib
+        - github.com/enterprise-contract/ec-policies//policy/release
+      data:
+        - github.com/enterprise-contract/ec-policies//data
+  configuration:
+    include:
+      - '@slsa1'
+      - '@slsa2'
+      - '@slsa3'
+    exclude:
+      # Exclude step_image_registries for now since it can cause false
+      # positives due to https://issues.redhat.com/browse/OCPBUGS-8428
+      - step_image_registries
